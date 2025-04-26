@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+
 @Component
 public class JwtUtil {
 
@@ -59,6 +60,8 @@ public class JwtUtil {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
+    //Extract Name
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
