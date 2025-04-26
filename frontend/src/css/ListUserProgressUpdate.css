@@ -1,0 +1,63 @@
+.progressUpdates {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.progress-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #0077ff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.progress-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 119, 255, 0.15);
+}
+
+.progress-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.progress-card p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.progress-card a {
+  color: #0077ff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.progress-card a:hover {
+  text-decoration: underline;
+}
+
+.progress-card img {
+  margin-top: 0.8rem;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.progress-card ul {
+  padding-left: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.progress-card li {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}

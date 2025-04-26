@@ -1,0 +1,76 @@
+.create-progress-form-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Roboto", sans-serif;
+}
+
+.create-progress-form-container h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 500;
+  text-align: center;
+}
+
+.create-progress-form input,
+.create-progress-form select {
+  width: 100%;
+  padding: 0.75rem 0.3rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.create-progress-form input:focus,
+.create-progress-form select:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+.date-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.date-group label {
+  grid-column: span 2;
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 0.3rem;
+}
+
+.create-progress-form button {
+  background-color: #1976d2;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: block;
+  margin-left: auto;
+}
+
+.create-progress-form button:hover {
+  background-color: #125aa5;
+}
+
+@media (max-width: 600px) {
+  .date-group {
+    grid-template-columns: 1fr;
+  }
+
+  .create-progress-form button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}
