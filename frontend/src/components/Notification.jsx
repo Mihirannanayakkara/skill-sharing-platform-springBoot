@@ -24,6 +24,7 @@ const Notification = ({ message, isVisible, onClose }) => {
                 Close
               </button>
             </div>
+            <div> </div>
           </div>
         </motion.div>
       )}
