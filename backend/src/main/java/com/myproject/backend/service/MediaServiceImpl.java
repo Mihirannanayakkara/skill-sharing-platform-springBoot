@@ -35,7 +35,7 @@ public class MediaServiceImpl implements MediaService {
                 validateVideo(mediaFiles[0]);
                 String videoUrl = uploadToFirebase(mediaFiles[0], "videos");
                 mediaModel.setVideoUrl(videoUrl);
-                        mediaModel.setMediaType(MediaModel.MediaType.VIDEO);
+                mediaModel.setMediaType(MediaModel.MediaType.VIDEO);
             } else {
                 validateImages(mediaFiles);
                 List<String> imageUrls = new ArrayList<>();
@@ -47,13 +47,12 @@ public class MediaServiceImpl implements MediaService {
                 mediaModel.setMediaType(MediaModel.MediaType.IMAGE);
             }
 
-            return  mediaRepository.save(mediaModel);
+            return mediaRepository.save(mediaModel);
 
         } catch (IOException e) {
             throw new IOException("Failed to upload media to Firebase: " + e.getMessage());
         }
     }
-
 
 
     private void validateVideo(MultipartFile file) throws IllegalArgumentException {
@@ -98,4 +97,63 @@ public class MediaServiceImpl implements MediaService {
                 bucketName,
                 fileName.replace("/", "%2F"));
     }
+
+    @Override
+    public List<MediaModel> getAllPosts() {
+        return mediaRepository.findAll();
+    }
+
+    @Override
+    public Optional<MediaModel> getPostById(String id) {
+        return mediaRepository.findById(id);
+    }
+
+    @Override
+    public void deletePost(String id) {
+        Optional<MediaModel> postOptional = mediaRepository.findById(id);
+
+        if (postOptional.isPresent()) {
+            MediaModel post = postOptional.get();
+            Bucket bucket = StorageClient.getInstance().bucket(bucketName);
+
+            // 🔥 1. Delete images from Firebase Storage (if images exist)
+            if (post.getImageUrls() != null) {
+                for (String imageUrl : post.getImageUrls()) {
+                    String filePath = extractFilePathFromUrl(imageUrl);
+                    bucket.get(filePath).delete();
+                }
+            }
+
+            // 🔥 2. Delete video from Firebase Storage (if exists)
+            if (post.getVideoUrl() != null) {
+                String filePath = extractFilePathFromUrl(post.getVideoUrl());
+                bucket.get(filePath).delete();
+            }
+
+            // 🔥 3. Finally, delete the post from MongoDB
+            mediaRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public MediaModel updatePostDescription(String id, String description) {
+        Optional<MediaModel> optionalPost = mediaRepository.findById(id);
+        if (optionalPost.isPresent()) {
+            MediaModel post = optionalPost.get();
+            post.setDescription(description);
+            return mediaRepository.save(post);
+        } else {
+            throw new NoSuchElementException("Post not found with ID: " + id);
+        }
+    }
+
+    @Override
+    public List<MediaModel> getPostsByUserId(String userId) {
+        return mediaRepository.findByUserId(userId);
+    }
+
+    private String extractFilePathFromUrl(String url) {
+        return url.substring(url.indexOf("/o/") + 3, url.indexOf("?alt=media")).replace("%2F", "/");
+    }
+
 }
