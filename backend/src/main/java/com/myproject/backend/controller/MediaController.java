@@ -6,7 +6,6 @@ import com.myproject.backend.service.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,17 +27,12 @@ public class MediaController {
     /* CREATE */
     @PostMapping
     public ResponseEntity<?> createPost(
+            @RequestParam String userId,
             @RequestParam(required = false) String description,
             @RequestParam MultipartFile[] mediaFiles,
             @RequestParam boolean isVideo) {
 
         try {
-            // ← extract userId from the JWT-authenticated principal
-            String userId = SecurityContextHolder
-                    .getContext()
-                    .getAuthentication()
-                    .getName();
-
             // ← now call your service with the four parameters
             MediaModel post = mediaService.createPost(userId, description, mediaFiles, isVideo);
             return ResponseEntity.status(HttpStatus.CREATED).body(post);
