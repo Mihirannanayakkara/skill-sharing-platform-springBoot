@@ -21,5 +21,5 @@ public class LearningPlan {
     private String startDate;
     private String endDate;
     private List<String> topics;
-
+    private List<Task> tasks; // Reference to the Task class
 }

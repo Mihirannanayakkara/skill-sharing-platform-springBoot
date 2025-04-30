@@ -1,7 +1,7 @@
 package com.myproject.backend.controller;
 
 import com.myproject.backend.model.LearningPlan;
-
+import com.myproject.backend.model.Task;
 import com.myproject.backend.service.LearningPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +37,21 @@ public class LearningPlanController {
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/addManualTask")
+    public ResponseEntity<LearningPlan> addManualTask(
+            @PathVariable String id,
+            @RequestParam String taskName,
+            @RequestParam String taskDescription) {
+        LearningPlan updatedPlan = service.addManualTask(id, taskName, taskDescription);
+        return ResponseEntity.ok(updatedPlan);
+    }
+
+    @PutMapping("/{id}/addAiGeneratedTasks")
+    public ResponseEntity<LearningPlan> addAiGeneratedTasks(@PathVariable String id, @RequestBody List<Task> aiTasks) {
+        LearningPlan updatedPlan = service.addAiGeneratedTasks(id, aiTasks);
+        return ResponseEntity.ok(updatedPlan);
     }
 
     // Endpoint to get details of a specific learning plan by ID

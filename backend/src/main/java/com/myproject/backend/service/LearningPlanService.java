@@ -1,7 +1,7 @@
 package com.myproject.backend.service;
 
 import com.myproject.backend.model.LearningPlan;
-
+import com.myproject.backend.model.Task; // Add import for Task
 import com.myproject.backend.repository.LearningPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,20 @@ public class LearningPlanService {
         return repository.findByUserId(userId);
     }
 
+    // Add a manual task to a learning plan
+    public LearningPlan addManualTask(String id, String taskName, String taskDescription) {
+        LearningPlan plan = learningPlanRepository.findById(id).orElseThrow();
+        plan.getTasks().add(new Task(taskName, taskDescription, false)); // Add new task
+        return learningPlanRepository.save(plan);
+    }
+
+    // Add AI-generated tasks
+    public LearningPlan addAiGeneratedTasks(String id, List<Task> aiTasks) {
+        LearningPlan plan = learningPlanRepository.findById(id).orElseThrow();
+        plan.getTasks().addAll(aiTasks); // Add AI-generated tasks
+        return learningPlanRepository.save(plan);
+    }
+
     // Update a learning plan
     public LearningPlan update(String id, LearningPlan updated) {
         LearningPlan plan = learningPlanRepository.findById(id).orElseThrow();
@@ -40,7 +54,7 @@ public class LearningPlanService {
         plan.setStartDate(updated.getStartDate());
         plan.setEndDate(updated.getEndDate());
         plan.setTopics(updated.getTopics());
-
+        plan.setTasks(updated.getTasks()); // Add tasks update
         return learningPlanRepository.save(plan);
     }
 
