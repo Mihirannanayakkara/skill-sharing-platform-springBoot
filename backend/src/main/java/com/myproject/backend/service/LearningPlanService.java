@@ -49,7 +49,10 @@ public class LearningPlanService {
         plan.setScope(updated.getScope());
         plan.setResourceLink(updated.getResourceLink());
         plan.setSkills(updated.getSkills());
+
+        // update SuggestedCourses
         plan.setSuggestedCourses(updated.getSuggestedCourses());
+
         plan.setDeadlineEnabled(updated.isDeadlineEnabled());
         plan.setStartDate(updated.getStartDate());
         plan.setEndDate(updated.getEndDate());
