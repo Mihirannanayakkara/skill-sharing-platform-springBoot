@@ -1,6 +1,6 @@
 package com.myproject.backend.controller;
 
-import com.example.demo.model.User;
+import com.myproject.backend.model.User;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
