@@ -1,6 +1,7 @@
 package com.myproject.backend.controller;
 
 import com.myproject.backend.model.User;
+import com.myproject.backend.service.AuthService;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
