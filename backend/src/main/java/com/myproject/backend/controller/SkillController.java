@@ -1,7 +1,10 @@
-package com.paf_project.learning_platform.controller;
+package com.myproject.backend.controller;
 
-import com.paf_project.learning_platform.entity.Skill;
-import com.paf_project.learning_platform.service.SkillService;
+//import com.paf_project.learning_platform.entity.Skill;
+//import com.paf_project.learning_platform.service.SkillService;
+
+import com.myproject.backend.model.Skill;
+import com.myproject.backend.service.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

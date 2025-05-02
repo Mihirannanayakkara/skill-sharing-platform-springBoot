@@ -1,4 +1,4 @@
-package com.paf_project.learning_platform.controller;
+package com.myproject.backend.controller;
 
 
 import org.bson.types.ObjectId;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.paf_project.learning_platform.dto.ProgressUpdateDTO;
-import com.paf_project.learning_platform.entity.ProgressUpdate;
-import com.paf_project.learning_platform.service.ProgressUpdateService;
+import com.myproject.backend.dto.ProgressUpdateDTO;
+import com.myproject.backend.model.ProgressUpdate;
+import com.myproject.backend.service.ProgressUpdateService;
 
 import java.util.List;
 import java.util.Optional;
