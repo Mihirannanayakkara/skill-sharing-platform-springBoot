@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.myproject.backend.repository.UserRepository;
+import com.myproject.backend.model.User;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -20,12 +23,22 @@ public class MediaServiceImpl implements MediaService {
     private String bucketName;
 
     @Autowired
+    private UserRepository userRepository;  // ✅ Inject UserRepository to check users
+
+
+    @Autowired
     private MediaRepo mediaRepository;
 
     @Override
     public MediaModel createPost(String userId, String description, MultipartFile[] mediaFiles, boolean isVideo) throws IOException {
 
         try {
+            // ✅ Validate user exists
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isEmpty()) {
+                throw new IllegalArgumentException("Invalid user ID. User does not exist.");
+            }
+
             MediaModel mediaModel = new MediaModel();
             mediaModel.setUserId(userId); // ✅ Set userId here
             mediaModel.setDescription(description);
@@ -136,15 +149,52 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public MediaModel updatePostDescription(String id, String description) {
+    public MediaModel updatePost(String id, String description, MultipartFile[] mediaFiles, boolean isVideo) throws IOException {
         Optional<MediaModel> optionalPost = mediaRepository.findById(id);
-        if (optionalPost.isPresent()) {
-            MediaModel post = optionalPost.get();
-            post.setDescription(description);
-            return mediaRepository.save(post);
-        } else {
+        if (optionalPost.isEmpty()) {
             throw new NoSuchElementException("Post not found with ID: " + id);
         }
+
+        MediaModel post = optionalPost.get();
+
+        // ✅ Always update description
+        post.setDescription(description);
+
+        // ✅ Only update media if new files are provided
+        if (mediaFiles != null && mediaFiles.length > 0) {
+            // 🔁 Delete old media
+            Bucket bucket = StorageClient.getInstance().bucket(bucketName);
+            if (post.getMediaType() == MediaModel.MediaType.IMAGE && post.getImageUrls() != null) {
+                for (String imageUrl : post.getImageUrls()) {
+                    String filePath = extractFilePathFromUrl(imageUrl);
+                    bucket.get(filePath).delete();
+                }
+            } else if (post.getMediaType() == MediaModel.MediaType.VIDEO && post.getVideoUrl() != null) {
+                String filePath = extractFilePathFromUrl(post.getVideoUrl());
+                bucket.get(filePath).delete();
+            }
+
+            // 🔁 Upload new media
+            if (isVideo) {
+                validateVideo(mediaFiles[0]);
+                String videoUrl = uploadToFirebase(mediaFiles[0], "videos");
+                post.setVideoUrl(videoUrl);
+                post.setImageUrls(null);  // Clear old images
+                post.setMediaType(MediaModel.MediaType.VIDEO);
+            } else {
+                validateImages(mediaFiles);
+                List<String> imageUrls = new ArrayList<>();
+                for (MultipartFile file : mediaFiles) {
+                    String imageUrl = uploadToFirebase(file, "images");
+                    imageUrls.add(imageUrl);
+                }
+                post.setImageUrls(imageUrls);
+                post.setVideoUrl(null); // Clear old video
+                post.setMediaType(MediaModel.MediaType.IMAGE);
+            }
+        }
+
+        return mediaRepository.save(post);
     }
 
     @Override
@@ -154,6 +204,25 @@ public class MediaServiceImpl implements MediaService {
 
     private String extractFilePathFromUrl(String url) {
         return url.substring(url.indexOf("/o/") + 3, url.indexOf("?alt=media")).replace("%2F", "/");
+    }
+
+    @Override
+    public void sharePost(String originalPostId, String fromUserId, String toUserId) {
+        MediaModel originalPost = mediaRepository.findById(originalPostId)
+                .orElseThrow(() -> new RuntimeException("Original post not found"));
+
+        MediaModel sharedPost = new MediaModel();
+        sharedPost.setUserId(toUserId); // ❗ shared to another user's wall
+        sharedPost.setDescription(originalPost.getDescription());
+        sharedPost.setImageUrls(originalPost.getImageUrls());
+        sharedPost.setVideoUrl(originalPost.getVideoUrl());
+        sharedPost.setMediaType(originalPost.getMediaType());
+        sharedPost.setCreatedAt(new Date());
+
+        // 👇 Add a small "sharedBy" info at the beginning
+        sharedPost.setDescription("[Shared by User ID: " + fromUserId + "] " + originalPost.getDescription());
+
+        mediaRepository.save(sharedPost);
     }
 
 }

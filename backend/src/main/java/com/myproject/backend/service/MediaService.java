@@ -16,9 +16,17 @@ public interface MediaService {
 
     void deletePost(String id);
 
-    MediaModel updatePostDescription(String id, String description);
+    MediaModel updatePost(String id, String description, MultipartFile[] mediaFiles, boolean isVideo) throws IOException;
 
     List<MediaModel> getPostsByUserId(String userId);
+
+    void sharePost(String originalPostId, String fromUserId, String toUserId);
+
+
+
+
+
+
 }
 
 
