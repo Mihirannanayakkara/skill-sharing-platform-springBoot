@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
+
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import RegisterPage from './pages/RegisterPage';
+import UnauthorizedPage from './pages/UnauthorizedPage';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './routes/ProtectedRoute';
+import MyCourseDetail from './pages/MyCourseDetail';
+import CertificatePage from './pages/CertificatePage'; // ➡️ Add import
+import PostListPage from './pages/PostListPage';
+import CreatePost from './pages/CreatePost';
+import ViewMyPosts from './pages/ViewMyPosts';
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+    return (
+        <SnackbarProvider maxSnack={3}>
+            <Routes>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/my-course/:courseId" element={<MyCourseDetail />} />
+                <Route path="/certificate/:courseId" element={<CertificatePage />} />
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+                <Route path="/post/viewall" element={<PostListPage />} />
+                <Route path="/post/create" element={<CreatePost />} />
+                <Route path="/post/myposts" element={<ViewMyPosts />} />
+
+                <Route path="/admin" element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <AdminDashboard />
+                    </ProtectedRoute>
+                } />
+
+
+
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            </Routes>
+        </SnackbarProvider>
+    );
 }
 
-export default App
+export default App;
