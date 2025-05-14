@@ -1,38 +1,28 @@
 package com.myproject.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "skills")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Skill {
     @Id
     private String id;
-
-    @Indexed(unique = true)
     private String name;
+    private String userId;
 
-    public Skill(String name) {
+    public Skill() {}
+
+    public Skill(String name, String userId) {
         this.name = name;
+        this.userId = userId;
     }
 
-    // // Override equals and hashCode based on name
-    // @Override
-    // public boolean equals(Object o) {
-    //     if (this == o) return true;
-    //     if (!(o instanceof Skill)) return false;
-    //     Skill skill = (Skill) o;
-    //     return name.equalsIgnoreCase(skill.name);
-    // }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    // @Override
-    // public int hashCode() {
-    //     return name.toLowerCase().hashCode();
-    // }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 }

@@ -5,6 +5,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +39,7 @@ public class FirebaseConfig {
             }
         }
 
+        @Bean
         public StorageClient storageClient() {
             return StorageClient.getInstance();
         }
