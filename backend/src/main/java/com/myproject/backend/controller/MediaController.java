@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.myproject.backend.dto.ShareRequestDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,12 +59,14 @@ public class MediaController {
     }
 
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<MediaModel> updateDescription(@PathVariable String id, @RequestBody String description) {
-        if (description == null || description.trim().isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        MediaModel updatedPost = mediaService.updatePostDescription(id, description.trim());
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<MediaModel> updatePost(
+            @PathVariable String id,
+            @RequestParam("description") String description,
+            @RequestParam(value = "mediaFiles", required = false) MultipartFile[] mediaFiles,
+            @RequestParam("isVideo") boolean isVideo
+    ) throws IOException {
+        MediaModel updatedPost = mediaService.updatePost(id, description, mediaFiles, isVideo);
         return ResponseEntity.ok(updatedPost);
     }
 
@@ -73,5 +76,22 @@ public class MediaController {
         mediaService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
+
+    // ✅ Fetch posts for a specific user
+    @GetMapping("/user/{userId}")
+    public List<MediaModel> getPostsByUser(@PathVariable String userId) {
+        return mediaService.getPostsByUserId(userId);
+    }
+
+    @PostMapping("/share")
+    public ResponseEntity<?> sharePost(@RequestBody ShareRequestDTO request) {
+        try {
+            mediaService.sharePost(request.getPostId(), request.getFromUserId(), request.getToUserId());
+            return ResponseEntity.ok("Post shared successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to share post: " + e.getMessage());
+        }
+    }
+
 
 }
