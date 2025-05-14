@@ -1,74 +1,36 @@
 package com.myproject.backend.service;
 
 import com.myproject.backend.model.LearningPlan;
-import com.myproject.backend.model.Task; // Add import for Task
 import com.myproject.backend.repository.LearningPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LearningPlanService {
 
     @Autowired
-    private LearningPlanRepository learningPlanRepository;
+    private LearningPlanRepository learningPlanRepo;
 
-    @Autowired
-    private LearningPlanRepository repository;
-
-    // Create a learning plan
-    public LearningPlan create(LearningPlan plan) {
-        return learningPlanRepository.save(plan);
+    public LearningPlan createPlan(LearningPlan plan) {
+        return learningPlanRepo.save(plan);
     }
 
-    // Get learning plans by user ID
-    public List<LearningPlan> getByUser(String userId) {
-        return repository.findByUserId(userId);
+    public List<LearningPlan> getPlansByUser(String userId) {
+        return learningPlanRepo.findByUserId(userId);
     }
 
-    // Add a manual task to a learning plan
-    public LearningPlan addManualTask(String id, String taskName, String taskDescription) {
-        LearningPlan plan = learningPlanRepository.findById(id).orElseThrow();
-        plan.getTasks().add(new Task(taskName, taskDescription, false)); // Add new task
-        return learningPlanRepository.save(plan);
+    public Optional<LearningPlan> getPlanById(String id) {
+        return learningPlanRepo.findById(id);
     }
 
-    // Add AI-generated tasks
-    public LearningPlan addAiGeneratedTasks(String id, List<Task> aiTasks) {
-        LearningPlan plan = learningPlanRepository.findById(id).orElseThrow();
-        plan.getTasks().addAll(aiTasks); // Add AI-generated tasks
-        return learningPlanRepository.save(plan);
+    public LearningPlan updatePlan(String id, LearningPlan updatedPlan) {
+        return learningPlanRepo.save(updatedPlan);
     }
 
-    // Update a learning plan
-    public LearningPlan update(String id, LearningPlan updated) {
-        LearningPlan plan = learningPlanRepository.findById(id).orElseThrow();
-        plan.setTitle(updated.getTitle());
-        plan.setBackground(updated.getBackground());
-        plan.setScope(updated.getScope());
-        plan.setResourceLink(updated.getResourceLink());
-        plan.setSkills(updated.getSkills());
-
-        // update SuggestedCourses
-        plan.setSuggestedCourses(updated.getSuggestedCourses());
-
-        plan.setDeadlineEnabled(updated.isDeadlineEnabled());
-        plan.setStartDate(updated.getStartDate());
-        plan.setEndDate(updated.getEndDate());
-        plan.setTopics(updated.getTopics());
-        plan.setTasks(updated.getTasks()); // Add tasks update
-        return learningPlanRepository.save(plan);
-    }
-
-    // Delete a learning plan
-    public void delete(String id) {
-        learningPlanRepository.deleteById(id);
-    }
-
-    // Method to get a learning plan by its ID
-    public LearningPlan getById(String id) {
-        Optional<LearningPlan> plan = repository.findById(id);
-        return plan.orElse(null); // Return the plan if found, or null if not found
+    public void deletePlan(String id) {
+        learningPlanRepo.deleteById(id);
     }
 }
