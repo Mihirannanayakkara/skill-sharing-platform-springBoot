@@ -13,7 +13,11 @@ import PostListPage from './pages/PostListPage';
 import CreatePost from './pages/CreatePost';
 import ViewMyPosts from './pages/ViewMyPosts';
 
-
+import LearningProgressPage from './pages/LearningProgressPage';
+import LearningPlanPage from './pages/LearningPlanPage';
+import LearningPlanDetailPage from './pages/LearningPlanDetailPage';
+import AIGenerateTasksPage from "./pages/AIGenerateTasksPage";
+import ShareLearningPlan from './pages/ShareLearningPlan';
 
 function App() {
     return (
@@ -28,6 +32,12 @@ function App() {
                 <Route path="/post/viewall" element={<PostListPage />} />
                 <Route path="/post/create" element={<CreatePost />} />
                 <Route path="/post/myposts" element={<ViewMyPosts />} />
+
+<Route path="/learning-progress" element={<LearningProgressPage />} />
+ <Route path="/learningplan" element={<LearningPlanPage />} />
+      <Route path="/learningplan/view/:planId" element={<LearningPlanDetailPage />} />
+      <Route path="/aigenerate-tasks" element={<AIGenerateTasksPage />} />
+      <Route path="/learningplan/share/:planId" element={<ShareLearningPlan />} />
 
                 <Route path="/admin" element={
                     <ProtectedRoute allowedRoles={['admin']}>
