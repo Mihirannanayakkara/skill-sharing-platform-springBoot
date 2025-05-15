@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import AdminDashboard from './pages/AdminDashboard';
+import LearningProgressPage from './pages/LearningProgressPage';
 import ProtectedRoute from './routes/ProtectedRoute';
 import MyCourseDetail from './pages/MyCourseDetail';
 import CertificatePage from './pages/CertificatePage'; // ➡️ Add import
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/home" element={<HomePage />} />
+                <Route path="/learning-progress" element={<LearningProgressPage />} />
                 <Route path="/my-course/:courseId" element={<MyCourseDetail />} />
                 <Route path="/certificate/:courseId" element={<CertificatePage />} />
 
