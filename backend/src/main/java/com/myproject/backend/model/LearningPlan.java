@@ -42,6 +42,11 @@ public class LearningPlan {
     public static class Task {
         private String taskName;
         private String taskDescription;
-        private boolean completed; // for ticking
+        private boolean completed;
+        // for ticking
+
+        private String objective;
+        private String estimatedTime;
+        private List<String> suggestedResources;
     }
 }
