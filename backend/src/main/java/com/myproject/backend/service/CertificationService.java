@@ -51,4 +51,8 @@ public class CertificationService {
         certificationRepository.deleteById(id);
     }
     
+    public List<Certification> getAllCertifications() {
+    return certificationRepository.findAll();
+}
+
 }

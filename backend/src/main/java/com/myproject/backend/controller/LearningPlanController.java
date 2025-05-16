@@ -41,5 +41,10 @@ public class LearningPlanController {
         learningPlanService.deletePlan(id);
     }
 
+     @GetMapping("/all")
+public List<LearningPlan> getAllLearningPlans() {
+    return learningPlanService.getAllLearningPlans();
+}
+
     
 }
