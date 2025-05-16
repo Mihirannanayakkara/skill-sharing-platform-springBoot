@@ -40,4 +40,9 @@ public class CertificationController {
         certificationService.deleteCertification(id);
     }
 
+    @GetMapping("/all")
+    public List<Certification> getAllCertifications() {
+    return certificationService.getAllCertifications();
+}
+
 }

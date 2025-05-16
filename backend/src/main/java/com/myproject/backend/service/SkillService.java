@@ -24,5 +24,7 @@ public class SkillService {
     public void deleteSkill(String id) {
         skillRepository.deleteById(id);
     }
-    
+    public List<Skill> getAllSkills() {
+    return skillRepository.findAll();
+}
 }

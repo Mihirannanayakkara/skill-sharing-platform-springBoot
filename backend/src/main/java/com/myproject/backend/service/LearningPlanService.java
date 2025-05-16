@@ -33,4 +33,7 @@ public class LearningPlanService {
     public void deletePlan(String id) {
         learningPlanRepo.deleteById(id);
     }
+    public List<LearningPlan> getAllLearningPlans() {
+    return learningPlanRepo.findAll();
+}
 }
