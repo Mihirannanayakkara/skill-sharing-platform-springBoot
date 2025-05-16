@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ViewMyPosts from "./ViewMyPosts.jsx";
 import SkillSection from '../components/SkillSection';
-import Certifications from '../components/Certifications';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
