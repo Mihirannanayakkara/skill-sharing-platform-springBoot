@@ -12,6 +12,12 @@ import CertificatePage from './pages/CertificatePage'; // ➡️ Add import
 import PostListPage from './pages/PostListPage';
 import CreatePost from './pages/CreatePost';
 import ViewMyPosts from './pages/ViewMyPosts';
+import EditProfilePage from './pages/EditProfilePage';
+import NetworkPage from './pages/NetworkPage';
+import ProfilePage from './pages/ProfilePage';
+import UserProfileView from './pages/UserProfileView';
+import Navbar from './components/NavBar';
+import SavedItemsPage from './pages/SavedItemsPage';
 
 import LearningProgressPage from './pages/LearningProgressPage';
 import LearningPlanPage from './pages/LearningPlanPage';
@@ -20,7 +26,11 @@ import AIGenerateTasksPage from "./pages/AIGenerateTasksPage";
 import ShareLearningPlan from './pages/ShareLearningPlan';
 
 function App() {
+    const location = useLocation();
+    const showNavbar = location.pathname !== '/';
     return (
+        <>
+            {showNavbar && <Navbar />}
         <SnackbarProvider maxSnack={3}>
             <Routes>
                 <Route path="/" element={<LoginPage />} />
@@ -28,7 +38,11 @@ function App() {
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/my-course/:courseId" element={<MyCourseDetail />} />
                 <Route path="/certificate/:courseId" element={<CertificatePage />} />
-
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/network" element={<NetworkPage />} />
+                <Route path="/edit-profile" element={<EditProfilePage />} />
+                <Route path="/saved-items" element={<SavedItemsPage />} />
+                <Route path="/user/:userId" element={<UserProfileView />} />
                 <Route path="/post/viewall" element={<PostListPage />} />
                 <Route path="/post/create" element={<CreatePost />} />
                 <Route path="/post/myposts" element={<ViewMyPosts />} />
@@ -50,7 +64,7 @@ function App() {
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />
             </Routes>
         </SnackbarProvider>
-    );
+    </>);
 }
 
 export default App;
