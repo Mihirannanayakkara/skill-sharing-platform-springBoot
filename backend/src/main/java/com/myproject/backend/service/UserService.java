@@ -4,7 +4,9 @@ import com.myproject.backend.dto.AuthRequestDTO;
 import com.myproject.backend.dto.RegisterRequestDTO;
 import com.myproject.backend.dto.UserDTO;
 import com.myproject.backend.model.User;
+import com.myproject.backend.model.Follow;
 import com.myproject.backend.repository.UserRepository;
+import com.myproject.backend.repository.FollowRepository;
 import com.myproject.backend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -24,6 +27,9 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private FollowRepository followRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -89,13 +95,45 @@ public class UserService {
         User existingUser = userOptional.get();
         existingUser.setName(updatedUser.getName());
         existingUser.setEmail(updatedUser.getEmail());
-
+        existingUser.setCoverImageUrl(updatedUser.getCoverImageUrl());
         existingUser.setImageUrl(updatedUser.getImageUrl());
+        existingUser.setBio(updatedUser.getBio());
+
         return ResponseEntity.ok(userRepository.save(existingUser));
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public List<User> searchUsers(String query) {
+        String lowercaseQuery = query.toLowerCase();
+        return userRepository.findAll().stream()
+                .filter(user -> (user.getName() != null && user.getName().toLowerCase().contains(lowercaseQuery)) ||
+                        (user.getEmail() != null && user.getEmail().toLowerCase().contains(lowercaseQuery)))
+                .collect(Collectors.toList());
+    }
+
+    public Optional<User> getUserById(String id) {
+        return userRepository.findById(id);
+    }
+
+    public List<User> getFollowers(String userId) {
+        List<Follow> followers = followRepository.findByFollowingId(userId);
+        return followers.stream()
+                .map(follow -> userRepository.findById(follow.getFollowerId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getFollowing(String userId) {
+        List<Follow> following = followRepository.findByFollowerId(userId);
+        return following.stream()
+                .map(follow -> userRepository.findById(follow.getFollowingId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
 

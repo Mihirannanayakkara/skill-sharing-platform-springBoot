@@ -10,9 +10,11 @@ public class User {
     private String name;
     private String email;
     private String imageUrl;
+    private String coverImageUrl;
     private String password;
     private String authProvider; // "google" or "local"
     private String role; // "USER", "ADMIN", etc.
+    private String bio; // New field
 
     public User() {}
 
@@ -35,6 +37,9 @@ public class User {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
+    public String getCoverImageUrl() { return coverImageUrl; }
+    public void setCoverImageUrl(String coverImageUrl) { this.coverImageUrl = coverImageUrl; }
+
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
@@ -44,6 +49,9 @@ public class User {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
     @Override
     public String toString() {
         return "User{" +
@@ -51,8 +59,10 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", coverImageUrl='" + coverImageUrl + '\'' +
                 ", authProvider='" + authProvider + '\'' +
                 ", role='" + role + '\'' +
+                ", bio='" + bio + '\'' +
                 '}';
     }
 }

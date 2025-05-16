@@ -52,9 +52,30 @@ public class UserController {
                 .toList();
     }
 
- @GetMapping("/all")
-public List<User> getAllUsers() {
-    return userService.getAllUsers();
-}
+    @GetMapping("/search-v2")
+    public ResponseEntity<List<User>> searchUsersV2(@RequestParam String query) {
+        List<User> users = userService.searchUsers(query);
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/followers/{userId}")
+    public ResponseEntity<List<User>> getFollowers(@PathVariable String userId) {
+        List<User> followers = userService.getFollowers(userId);
+        return ResponseEntity.ok(followers);
+    }
+
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<List<User>> getFollowing(@PathVariable String userId) {
+        List<User> following = userService.getFollowing(userId);
+        return ResponseEntity.ok(following);
+    }
 
 }
+
