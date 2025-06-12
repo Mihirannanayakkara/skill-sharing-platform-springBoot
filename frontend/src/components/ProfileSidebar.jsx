@@ -5,6 +5,40 @@ import { Link, useNavigate } from 'react-router-dom';
 import { eventEmitter } from '../utils/eventEmitter';
 import Modal from './Modal';
 
+// Define color schemes for skills
+const skillColors = [
+    {
+        bg: 'bg-blue-50',
+        text: 'text-blue-600',
+        hover: 'group-hover:bg-blue-100'
+    },
+    {
+        bg: 'bg-purple-50',
+        text: 'text-purple-600',
+        hover: 'group-hover:bg-purple-100'
+    },
+    {
+        bg: 'bg-green-50',
+        text: 'text-green-600',
+        hover: 'group-hover:bg-green-100'
+    },
+    {
+        bg: 'bg-red-50',
+        text: 'text-red-600',
+        hover: 'group-hover:bg-red-100'
+    },
+    {
+        bg: 'bg-yellow-50',
+        text: 'text-yellow-600',
+        hover: 'group-hover:bg-yellow-100'
+    },
+    {
+        bg: 'bg-indigo-50',
+        text: 'text-indigo-600',
+        hover: 'group-hover:bg-indigo-100'
+    }
+];
+
 const ProfileSidebar = ({ user }) => {
     const [userStats, setUserStats] = useState({
         following: 0,

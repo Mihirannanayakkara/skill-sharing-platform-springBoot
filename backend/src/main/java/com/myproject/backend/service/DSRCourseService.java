@@ -31,7 +31,7 @@ public class DSRCourseService {
 
     public DSRCourse enrollUser(String courseId, String userId) {
         DSRCourse course = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
-    
+
         if (course.getEnrolledUserIds() == null) {
             course.setEnrolledUserIds(new ArrayList<>());
         }
@@ -41,17 +41,17 @@ public class DSRCourseService {
         if (course.getResourcesDownloadedMap() == null) {
             course.setResourcesDownloadedMap(new HashMap<>());
         }
-    
+
         if (!course.getEnrolledUserIds().contains(userId)) {
             course.getEnrolledUserIds().add(userId);
             course.getLessonViewedMap().put(userId, false);
             course.getResourcesDownloadedMap().put(userId, new ArrayList<>());
             return courseRepo.save(course);
         }
-    
+
         return course;
     }
-    
+
     public DSRCourse markLessonViewed(String courseId, String userId) {
         DSRCourse course = courseRepo.findById(courseId).orElseThrow();
         course.getLessonViewedMap().put(userId, true);
@@ -60,24 +60,24 @@ public class DSRCourseService {
 
     public DSRCourse markResourceDownloaded(String courseId, String userId, String resourceName) {
         DSRCourse course = courseRepo.findById(courseId).orElseThrow();
-    
+
         List<String> downloaded = course.getResourcesDownloadedMap().getOrDefault(userId, new ArrayList<>());
-    
+
         if (!downloaded.contains(resourceName)) {
             downloaded.add(resourceName);
             course.getResourcesDownloadedMap().put(userId, downloaded);
         }
-    
+
         // ✅ Updated for multiple lessons
         boolean lessonViewed = course.getLessonViewedMap().getOrDefault(userId, false);
         boolean allDownloaded = course.getLessons().stream()
-            .flatMap(lesson -> lesson.getResources().stream())
-            .allMatch(r -> downloaded.contains(r.getName()));
-    
+                .flatMap(lesson -> lesson.getResources().stream())
+                .allMatch(r -> downloaded.contains(r.getName()));
+
         if (lessonViewed && allDownloaded && !course.getCompletedUserIds().contains(userId)) {
             course.getCompletedUserIds().add(userId);
         }
-    
+
         return courseRepo.save(course);
     }
 
@@ -96,7 +96,7 @@ public class DSRCourseService {
 
     public DSRCourse unenrollUser(String courseId, String userId) {
         DSRCourse course = courseRepo.findById(courseId)
-            .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new RuntimeException("Course not found"));
 
         if (course.getEnrolledUserIds() != null) {
             course.getEnrolledUserIds().remove(userId);
@@ -113,6 +113,6 @@ public class DSRCourseService {
 
         return courseRepo.save(course);
     }
-    
+
 
 }

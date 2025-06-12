@@ -33,38 +33,38 @@ const CertificatePage = () => {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-8">
-      <div id="certificate" className="relative w-[842px] h-[595px] bg-white shadow-lg overflow-hidden">
-        <img src={certificateTemplate} alt="Certificate Template" className="absolute w-full h-full object-cover" />
-        <div className="absolute top-[190px] w-full text-center">
-          <h1 className="text-3xl font-bold text-blue-800">{user.name}</h1>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-8">
+        <div id="certificate" className="relative w-[842px] h-[595px] bg-white shadow-lg overflow-hidden">
+          <img src={certificateTemplate} alt="Certificate Template" className="absolute w-full h-full object-cover" />
+          <div className="absolute top-[190px] w-full text-center">
+            <h1 className="text-3xl font-bold text-blue-800">{user.name}</h1>
+          </div>
+          <div className="absolute top-[267px] w-full text-center">
+            <h2 className="text-2xl font-semibold text-gray-700">{course.title}</h2>
+          </div>
+          <div className="absolute bottom-[28px] left-16 text-sm text-black-600">
+            Issued: {today}
+          </div>
+          <div className="absolute bottom-[28px] right-16 text-sm text-black-600">
+            Certificate ID: {certificateId}
+          </div>
         </div>
-        <div className="absolute top-[267px] w-full text-center">
-          <h2 className="text-2xl font-semibold text-gray-700">{course.title}</h2>
-        </div>
-        <div className="absolute bottom-[28px] left-16 text-sm text-black-600">
-          Issued: {today}
-        </div>
-        <div className="absolute bottom-[28px] right-16 text-sm text-black-600">
-          Certificate ID: {certificateId}
-        </div>
-      </div>
 
-      <div className="mt-8 flex gap-4">
-        <button
-          onClick={handleDownload}
-          className="px-6 py-3 bg-green-600 text-white rounded shadow hover:bg-green-700"
-        >
-          Download Certificate
-        </button>
-        <button
-          onClick={() => navigate('/learning-progress')}
-          className="px-6 py-3 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
-        >
-          Back to Learning Progress
-        </button>
+        <div className="mt-8 flex gap-4">
+          <button
+              onClick={handleDownload}
+              className="px-6 py-3 bg-green-600 text-white rounded shadow hover:bg-green-700"
+          >
+            Download Certificate
+          </button>
+          <button
+              onClick={() => navigate('/learning-progress')}
+              className="px-6 py-3 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+          >
+            Back to Learning Progress
+          </button>
+        </div>
       </div>
-    </div>
   );
 };
 

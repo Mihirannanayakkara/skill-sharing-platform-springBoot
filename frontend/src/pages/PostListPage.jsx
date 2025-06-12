@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import ProfileSidebar from '../components/ProfileSidebar';
 import Navbar from '../components/NavBar';
-import UpcomingLearning from '../components/UpcomingLearning';
+import UserLearningPlans from '../components/UserLearningPlans';
 import PostCreator from '../components/PostCreator';
 import SaveButton from '../components/SaveButton';
+import LoadingSkeleton from '../components/LoadingSkeleton';
 
 // Media rendering function
 const renderMedia = (post) => {
@@ -248,38 +249,18 @@ const PostListPage = () => {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <div className="flex gap-6">
                             {/* Left Sidebar Skeleton */}
-                            <div className="w-80 flex-shrink-0 hidden lg:block">
-                                <div className="bg-white rounded-lg shadow-md p-6 animate-pulse">
-                                    <div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
-                                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                                </div>
+                            <div className="hidden lg:block w-1/4">
+                                <LoadingSkeleton type="sidebar" />
                             </div>
 
                             {/* Main Feed Skeleton */}
-                            <div className="flex-1 min-w-0 space-y-6">
-                                {[1, 2, 3].map((i) => (
-                                    <div key={i} className="bg-white rounded-lg shadow-md p-6 animate-pulse">
-                                        <div className="flex items-center space-x-4 mb-4">
-                                            <div className="h-12 w-12 bg-gray-200 rounded-full"></div>
-                                            <div className="flex-1">
-                                                <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                                                <div className="h-3 bg-gray-200 rounded w-1/3"></div>
-                                            </div>
-                                        </div>
-                                        <div className="h-64 bg-gray-200 rounded-lg mb-4"></div>
-                                        <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                                    </div>
-                                ))}
+                            <div className="flex-1">
+                                <LoadingSkeleton type="post" count={3} />
                             </div>
 
                             {/* Right Sidebar Skeleton */}
-                            <div className="w-80 flex-shrink-0 hidden lg:block">
-                                <div className="bg-white rounded-lg shadow-md p-6 animate-pulse">
-                                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                                    <div className="h-24 bg-gray-200 rounded-lg"></div>
-                                </div>
+                            <div className="hidden lg:block w-1/4">
+                                <LoadingSkeleton type="card" count={3} />
                             </div>
                         </div>
                     </div>
@@ -290,78 +271,81 @@ const PostListPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            {/* Navbar */}
             <Navbar />
-
-            {/* Main Content */}
-            <div className="pt-20"> {/* Added padding-top to account for fixed navbar */}
+            <div className="pt-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="flex gap-6">
                         {/* Left Sidebar */}
-                        <div className="w-80 flex-shrink-0 hidden lg:block">
-                            <div className="sticky top-24">
-                                <ProfileSidebar user={currentUser} />
-                            </div>
+                        <div className="hidden lg:block w-1/4">
+                            <ProfileSidebar />
                         </div>
 
-                        {/* Main Feed */}
-                        <div className="flex-1 min-w-0">
+                        {/* Main Content */}
+                        <div className="flex-1 space-y-6">
+                            {/* Search Bar */}
+                            <div className="relative">
+                                {/* User Suggestions */}
+                                {showSuggestions && userSuggestions.length > 0 && (
+                                    <div className="absolute w-full  bg-white rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+                                        {userSuggestions.map((user) => (
+                                            <div
+                                                key={user.id}
+                                                className="p-3 hover:bg-gray-100 cursor-pointer flex items-center"
+                                                onClick={() => handleUserClick(user.id)}
+                                            >
+                                                <img
+                                                    src={user.imageUrl || 'https://via.placeholder.com/40'}
+                                                    alt={user.name}
+                                                    className="w-8 h-8 rounded-full mr-3"
+                                                />
+                                                <div>
+                                                    <p className="font-medium">{user.name}</p>
+                                                    <p className="text-sm text-gray-500">{user.email}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
                             {/* Post Creator */}
                             <PostCreator onPostCreated={handleActionComplete} />
 
-                            {filteredPosts.length === 0 ? (
-                                <div className="bg-white rounded-lg shadow p-8 text-center">
-                                    <div className="text-gray-500 text-lg">
-                                        {showOnlyFollowed
-                                            ? "No posts from users you follow. Start following more users!"
-                                            : "No posts available. Be the first to post something!"}
-                                    </div>
+
+                            {/* Posts */}
+                            {isInitialLoading ? (
+                                <LoadingSkeleton type="post" count={3} />
+                            ) : filteredPosts.length === 0 ? (
+                                <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                                    <p className="text-gray-600">No posts found</p>
                                 </div>
                             ) : (
                                 <div className="space-y-6">
-                                    {filteredPosts.map(post => (
-                                        <Post
-                                            key={post.id}
-                                            post={post}
-                                            onActionComplete={handleActionComplete}
-                                        />
+                                    {filteredPosts.map((post) => (
+                                        <Post key={post.id} post={post} onActionComplete={handleActionComplete} />
                                     ))}
-                                </div>
-                            )}
-
-                            {hasMore && !isLoadingMore && (
-                                <button
-                                    onClick={loadMore}
-                                    className="mt-6 w-full py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors duration-200"
-                                >
-                                    Load More Posts
-                                </button>
-                            )}
-
-                            {isLoadingMore && (
-                                <div className="mt-6 flex justify-center">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
+                                    {hasMore && !isLoadingMore && (
+                                        <button
+                                            onClick={loadMore}
+                                            className="w-full py-3 bg-white text-blue-600 font-medium rounded-lg shadow-sm hover:bg-gray-50"
+                                        >
+                                            Load More
+                                        </button>
+                                    )}
+                                    {isLoadingMore && (
+                                        <LoadingSkeleton type="post" count={1} />
+                                    )}
                                 </div>
                             )}
                         </div>
 
                         {/* Right Sidebar */}
-                        <div className="w-80 flex-shrink-0 hidden lg:block">
-                            <div className="sticky top-24">
-                                <UpcomingLearning />
-                            </div>
+                        <div className="hidden lg:block w-1/4">
+                            <UserLearningPlans />
                         </div>
                     </div>
                 </div>
             </div>
-
-            {/* Add click outside handler to close suggestions */}
-            {showSuggestions && (
-                <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setShowSuggestions(false)}
-                />
-            )}
         </div>
     );
 };

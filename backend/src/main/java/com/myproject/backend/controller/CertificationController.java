@@ -42,7 +42,7 @@ public class CertificationController {
 
     @GetMapping("/all")
     public List<Certification> getAllCertifications() {
-    return certificationService.getAllCertifications();
-}
+        return certificationService.getAllCertifications();
+    }
 
 }

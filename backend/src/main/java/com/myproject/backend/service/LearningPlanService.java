@@ -34,6 +34,6 @@ public class LearningPlanService {
         learningPlanRepo.deleteById(id);
     }
     public List<LearningPlan> getAllLearningPlans() {
-    return learningPlanRepo.findAll();
-}
+        return learningPlanRepo.findAll();
+    }
 }

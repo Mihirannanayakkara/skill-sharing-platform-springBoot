@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ViewMyPosts from "./ViewMyPosts.jsx";
 import SkillSection from '../components/SkillSection';
+import CertificationSection from '../components/CertificationSection.jsx';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -9,6 +10,10 @@ const ProfilePage = () => {
     const [showFollowModal, setShowFollowModal] = useState(null); // 'followers' or 'following' or null
     const [followList, setFollowList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [enrolledCourses, setEnrolledCourses] = useState([]);
+    const [availableCourses, setAvailableCourses] = useState([]);
+    const [expandedCourse, setExpandedCourse] = useState(null);
+    const [courseLoading, setCourseLoading] = useState(true);
     const navigate = useNavigate();
     const userId = JSON.parse(localStorage.getItem("user"))?.id;
 
@@ -21,6 +26,7 @@ const ProfilePage = () => {
         setUser(userData);
         fetchUserDetails(userData.email);
         fetchFollowStats(userData.id);
+        fetchUserCourses(userData.id);
     }, [navigate]);
 
     const fetchUserDetails = async (email) => {
@@ -45,6 +51,61 @@ const ProfilePage = () => {
             setFollowStats(stats);
         } catch (error) {
             console.error('Error fetching follow stats:', error);
+        }
+    };
+
+    const fetchUserCourses = async (userId) => {
+        try {
+            setCourseLoading(true);
+            // Fetch enrolled courses
+            const enrolledResponse = await fetch(`http://localhost:8070/api/dsrcourses/enrolled/${userId}`);
+            if (!enrolledResponse.ok) throw new Error('Failed to fetch enrolled courses');
+            const enrolledData = await enrolledResponse.json();
+
+            // Fetch all available courses
+            const allCoursesResponse = await fetch(`http://localhost:8070/api/dsrcourses`);
+            if (!allCoursesResponse.ok) throw new Error('Failed to fetch available courses');
+            const allCoursesData = await allCoursesResponse.json();
+
+            // Calculate progress for enrolled courses
+            const coursesWithProgress = enrolledData.map(course => {
+                const totalLessons = course.lessons?.length || 0;
+                const viewedLessons = course.lessonViewedMap?.[userId] ? 1 : 0;
+                const progress = totalLessons > 0 ? (viewedLessons / totalLessons) * 100 : 0;
+
+                return {
+                    ...course,
+                    progress: progress,
+                    isEnrolled: true
+                };
+            });
+
+            setEnrolledCourses(coursesWithProgress);
+            setAvailableCourses(allCoursesData.filter(course =>
+                !enrolledData.some(enrolled => enrolled.id === course.id)
+            ));
+        } catch (error) {
+            console.error('Error fetching courses:', error);
+        } finally {
+            setCourseLoading(false);
+        }
+    };
+
+    const handleEnroll = async (courseId) => {
+        try {
+            const response = await fetch(`http://localhost:8070/api/dsrcourses/${courseId}/enroll/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to enroll in course');
+
+            // Refresh courses after enrollment
+            await fetchUserCourses(userId);
+        } catch (error) {
+            console.error('Error enrolling in course:', error);
         }
     };
 
@@ -79,6 +140,17 @@ const ProfilePage = () => {
         } catch (error) {
             console.error('Error unfollowing user:', error);
         }
+    };
+
+    const getColorScheme = (index) => {
+        const schemes = [
+            { bg: 'bg-blue-100', text: 'text-blue-600', button: 'bg-blue-600 hover:bg-blue-700', progress: 'bg-blue-600' },
+            { bg: 'bg-green-100', text: 'text-green-600', button: 'bg-green-600 hover:bg-green-700', progress: 'bg-green-600' },
+            { bg: 'bg-purple-100', text: 'text-purple-600', button: 'bg-purple-600 hover:bg-purple-700', progress: 'bg-purple-600' },
+            { bg: 'bg-red-100', text: 'text-red-600', button: 'bg-red-600 hover:bg-red-700', progress: 'bg-red-600' },
+            { bg: 'bg-yellow-100', text: 'text-yellow-600', button: 'bg-yellow-600 hover:bg-yellow-700', progress: 'bg-yellow-600' }
+        ];
+        return schemes[index % schemes.length];
     };
 
     if (isLoading) {
@@ -155,11 +227,17 @@ const ProfilePage = () => {
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                             <div className="p-6">
-                                <h2 className="text-2xl font-bold text-gray-900 mb-6">My Post</h2>
-                                <ViewMyPosts userId={user?.id} limit={2} />
+                                <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-xl font-medium ml-15 text-gray-500">My Posts</h2>
+                                </div>
+                                <div className="relative">
+                                    <div className="mt-8">
+                                        <ViewMyPosts userId={user?.id} limit={2} />
+                                    </div>
+                                </div>
                                 <div className="mt-4 text-center">
                                     <button
-                                        onClick={() => navigate('/my-posts')}
+                                        onClick={() => navigate('/post/viewall')}
                                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                     >
                                         Show More Posts
@@ -168,10 +246,11 @@ const ProfilePage = () => {
                             </div>
                         </div>
 
-                        {/* Certifications Section */}
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                        {/* Certification Section */}
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden mt-6">
                             <div className="p-6">
-                                <Certifications userId={user?.id} isOwnProfile={true} />
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Certifications</h2>
+                                <CertificationSection userId={user?.id} />
                             </div>
                         </div>
                     </div>
@@ -229,6 +308,150 @@ const ProfilePage = () => {
                                         <span className="text-gray-600">Following</span>
                                     </button>
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Learning Progress Section */}
+                        <div className="bg-white rounded-lg shadow-lg">
+                            <div className="p-6">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Learning Progress</h2>
+
+                                {courseLoading ? (
+                                    <div className="flex justify-center items-center py-8">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-6">
+                                        {/* Enrolled Courses */}
+                                        {enrolledCourses.length > 0 && (
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-semibold text-gray-900">Enrolled Courses</h3>
+                                                {enrolledCourses.map((course, index) => {
+                                                    const colorScheme = getColorScheme(index);
+                                                    return (
+                                                        <div key={course.id} className="border rounded-lg overflow-hidden">
+                                                            <button
+                                                                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                                                                onClick={() => setExpandedCourse(expandedCourse === course.id ? null : course.id)}
+                                                            >
+                                                                <div className="flex items-center space-x-3">
+                                                                    <div className={`${colorScheme.bg} p-2 rounded-lg`}>
+                                                                        <svg className={`w-6 h-6 ${colorScheme.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div className="text-left">
+                                                                        <h3 className="font-semibold text-gray-900">{course.title}</h3>
+                                                                        <span className="text-sm text-gray-500">Progress: {Math.round(course.progress)}%</span>
+                                                                    </div>
+                                                                </div>
+                                                                <svg className={`w-5 h-5 text-gray-500 transform transition-transform ${expandedCourse === course.id ? 'rotate-180' : ''}`}
+                                                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                                                </svg>
+                                                            </button>
+                                                            {expandedCourse === course.id && (
+                                                                <div className="p-4 bg-gray-50 border-t">
+                                                                    <div className="mb-4">
+                                                                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                                                            <div
+                                                                                className={`${colorScheme.progress} h-2.5 rounded-full`}
+                                                                                style={{ width: `${course.progress}%` }}
+                                                                            ></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p className="text-gray-600 mb-4">{course.description}</p>
+                                                                    <div className="space-y-2 mb-4">
+                                                                        <div className="flex items-center text-sm text-gray-600">
+                                                                            <span className="font-medium mr-2">Instructor:</span>
+                                                                            {course.instructorName}
+                                                                        </div>
+                                                                        <div className="flex items-center text-sm text-gray-600">
+                                                                            <span className="font-medium mr-2">Level:</span>
+                                                                            {course.skillLevel}
+                                                                        </div>
+                                                                        <div className="flex items-center text-sm text-gray-600">
+                                                                            <span className="font-medium mr-2">Duration:</span>
+                                                                            {course.duration}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="flex space-x-3">
+                                                                        <button
+                                                                            onClick={() => navigate(`/course/${course.id}`)}
+                                                                            className={`px-4 py-2 text-white rounded-lg transition-colors ${colorScheme.button}`}
+                                                                        >
+                                                                            Continue Learning
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => navigate(`/course/${course.id}/details`)}
+                                                                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                                                        >
+                                                                            View Details
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+
+                                        {/* Available Courses */}
+                                        {availableCourses.length > 0 && (
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-semibold text-gray-900">Available Courses</h3>
+                                                {availableCourses.map((course, index) => (
+                                                    <div key={course.id} className="border rounded-lg overflow-hidden">
+                                                        <div className="p-4">
+                                                            <div className="flex items-center justify-between">
+                                                                <div className="flex items-center space-x-3">
+                                                                    <div className={`${getColorScheme(index).bg} p-2 rounded-lg`}>
+                                                                        <svg className={`w-6 h-6 ${getColorScheme(index).text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h3 className="font-semibold text-gray-900">{course.title}</h3>
+                                                                        <p className="text-sm text-gray-500">{course.skillLevel} • {course.duration}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => handleEnroll(course.id)}
+                                                                    className={`px-2 py-2 ${getColorScheme(index).button} text-white rounded-lg transition-colors`}
+                                                                >
+                                                                    Enroll
+                                                                </button>
+                                                            </div>
+                                                            <p className="mt-2 text-sm text-gray-600">{course.description}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {enrolledCourses.length === 0 && availableCourses.length === 0 && (
+                                            <div className="text-center py-8 text-gray-500">
+                                                <p className="mb-4">No courses available at the moment.</p>
+                                                <button
+                                                    onClick={() => navigate('/learningplan')}
+                                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                                >
+                                                    View Learning Plan
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                                <div className="flex justify-center">
+                                    <button
+                                        onClick={() => navigate('/learning-progress')}
+                                        className="px-3 py-2 mt-5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                                    >
+                                        View Learning Plan
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
                     </div>

@@ -38,7 +38,7 @@ const ShareModal = ({ postId, fromUserId, onClose, onShared }) => {
                 body: JSON.stringify({
                     postId,
                     fromUserId,
-                    toUserId: selectedUser.id,
+                    toUserId: selectedUser.id
                 }),
             });
 

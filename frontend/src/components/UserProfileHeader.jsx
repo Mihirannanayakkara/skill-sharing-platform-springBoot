@@ -24,25 +24,25 @@ const UserProfileHeader = () => {
   if (!user) return null;
 
   return (
-    <div className="bg-white p-4 rounded shadow flex items-center justify-between mb-6">
-      <div className="flex items-center gap-4">
-        <img
-          src={user.imageUrl}
-          alt="Profile"
-          className="w-20 h-20 rounded-full object-cover border"
-        />
-        <div>
-          <h2 className="text-xl font-bold">{user.name}</h2>
-          <p className="text-gray-600">{user.email}</p>
+      <div className="bg-white p-4 rounded shadow flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <img
+              src={user.imageUrl}
+              alt="Profile"
+              className="w-20 h-20 rounded-full object-cover border"
+          />
+          <div>
+            <h2 className="text-xl font-bold">{user.name}</h2>
+            <p className="text-gray-600">{user.email}</p>
+          </div>
         </div>
+        <button
+            onClick={() => navigate('/edit-profile')}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Edit Details
+        </button>
       </div>
-      <button
-        onClick={() => navigate('/edit-profile')}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Edit Details
-      </button>
-    </div>
   );
 };
 
