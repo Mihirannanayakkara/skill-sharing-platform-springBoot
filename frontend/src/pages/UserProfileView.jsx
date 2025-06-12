@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// import UserPosts from '../components/UserPosts';
+import UserPosts from '../components/UserPosts';
 import SkillSection from '../components/SkillSection';
 
 const UserProfileView = () => {
@@ -94,6 +94,7 @@ const UserProfileView = () => {
         }
     };
 
+
     const fetchFollowList = async (type) => {
         setIsLoadingList(true);
         try {
@@ -112,6 +113,7 @@ const UserProfileView = () => {
             setIsLoadingList(false);
         }
     };
+
 
     if (isLoading) {
         return (
@@ -245,7 +247,7 @@ const UserProfileView = () => {
                         {/* Skills Section */}
                         <div className="bg-white rounded-lg shadow-lg">
                             <div className="p-6">
-                                <h2 className="text-2xl font-bold text-gray-900 mb-6">Skills</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-0"></h2>
                                 <SkillSection userId={userId} viewOnly={currentUser?.id !== userId} />
                             </div>
                         </div>

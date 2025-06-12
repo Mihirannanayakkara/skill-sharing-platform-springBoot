@@ -31,40 +31,40 @@ function App() {
     return (
         <>
             {showNavbar && <Navbar />}
-        <SnackbarProvider maxSnack={3}>
-            <Routes>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/my-course/:courseId" element={<MyCourseDetail />} />
-                <Route path="/certificate/:courseId" element={<CertificatePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/network" element={<NetworkPage />} />
-                <Route path="/edit-profile" element={<EditProfilePage />} />
-                <Route path="/saved-items" element={<SavedItemsPage />} />
-                <Route path="/user/:userId" element={<UserProfileView />} />
-                <Route path="/post/viewall" element={<PostListPage />} />
-                <Route path="/post/create" element={<CreatePost />} />
-                <Route path="/post/myposts" element={<ViewMyPosts />} />
+            <SnackbarProvider maxSnack={3}>
+                <Routes>
+                    <Route path="/" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/my-course/:courseId" element={<MyCourseDetail />} />
+                    <Route path="/certificate/:courseId" element={<CertificatePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/network" element={<NetworkPage />} />
+                    <Route path="/edit-profile" element={<EditProfilePage />} />
+                    <Route path="/saved-items" element={<SavedItemsPage />} />
+                    <Route path="/user/:userId" element={<UserProfileView />} />
+                    <Route path="/post/viewall" element={<PostListPage />} />
+                    <Route path="/post/create" element={<CreatePost />} />
+                    <Route path="/post/myposts" element={<ViewMyPosts />} />
 
-<Route path="/learning-progress" element={<LearningProgressPage />} />
- <Route path="/learningplan" element={<LearningPlanPage />} />
-      <Route path="/learningplan/view/:planId" element={<LearningPlanDetailPage />} />
-      <Route path="/aigenerate-tasks" element={<AIGenerateTasksPage />} />
-      <Route path="/learningplan/share/:planId" element={<ShareLearningPlan />} />
+                    <Route path="/learning-progress" element={<LearningProgressPage />} />
+                    <Route path="/learningplan" element={<LearningPlanPage />} />
+                    <Route path="/learningplan/view/:planId" element={<LearningPlanDetailPage />} />
+                    <Route path="/aigenerate-tasks" element={<AIGenerateTasksPage />} />
+                    <Route path="/learningplan/share/:planId" element={<ShareLearningPlan />} />
 
-                <Route path="/admin" element={
-                    <ProtectedRoute allowedRoles={['admin']}>
-                        <AdminDashboard />
-                    </ProtectedRoute>
-                } />
+                    <Route path="/admin" element={
+                        <ProtectedRoute allowedRoles={['admin']}>
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    } />
 
 
 
-                <Route path="/unauthorized" element={<UnauthorizedPage />} />
-            </Routes>
-        </SnackbarProvider>
-    </>);
+                    <Route path="/unauthorized" element={<UnauthorizedPage />} />
+                </Routes>
+            </SnackbarProvider>
+        </>);
 }
 
 export default App;

@@ -5,6 +5,8 @@ import ShareModal from "../components/ShareModal";
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaEllipsisV, FaShare, FaHeart, FaComment, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
+import profileImage from '../assets/WhatsApp Image 2025-05-17 at 12.06.43 PM.jpeg';
+
 const ViewMyPosts = () => {
     const [posts, setPosts] = useState([]);
     const [postToEdit, setPostToEdit] = useState(null);
@@ -52,7 +54,6 @@ const ViewMyPosts = () => {
     return (
         <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">My Posts</h1>
                 {posts.length === 0 ? (
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -82,11 +83,11 @@ const ViewMyPosts = () => {
                                         <div className="flex items-center space-x-3">
                                             <img
                                                 className="h-10 w-10 rounded-full object-cover border-2 border-blue-500"
-                                                src={post.userAvatar || 'https://via.placeholder.com/48'}
+                                                src={profileImage}
                                                 alt={post.originalUserName || 'User'}
                                             />
                                             <div>
-                                                <h3 className="text-lg font-semibold text-gray-800">{post.originalUserName || 'Unknown User'}</h3>
+                                                <h3 className="text-lg font-semibold text-gray-800">Mihiran</h3>
                                                 <p className="text-sm text-gray-500">{new Date(post.createdAt).toLocaleString()}</p>
                                             </div>
                                         </div>
@@ -196,8 +197,8 @@ const ViewMyPosts = () => {
                                         <video controls src={post.videoUrl} className="w-full rounded-lg mb-2"/>
                                     )}
                                     <div className="ml-1 text-sm text-gray-500">
-                                        {Math.floor(Math.random() * 100)} likes · {Math.floor(Math.random() * 10)} comments
-                                        · {Math.floor(Math.random() * 5)} reposts
+                                        {Math.floor(Math.random() * 2)} likes · {Math.floor(Math.random() * 2)} comments
+                                        · {Math.floor(Math.random() * 2)} reposts
                                     </div>
                                     <div className="flex justify-between items-center mt-2 border-t pt-3">
                                         <div className="flex justify-between w-full">

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaImage, FaVideo, FaTimes, FaPlay, FaExclamationCircle } from 'react-icons/fa';
+import { useSnackbar } from 'notistack';
 
 const CreatePost = () => {
     const [files, setFiles] = useState([]);
@@ -11,10 +12,12 @@ const CreatePost = () => {
     const [wordCount, setWordCount] = useState(0);
     const [aiGeneratedText, setAIGeneratedText] = useState('');
     const [generating, setGenerating] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // New loading state
 
     const navigate = useNavigate();
     const imageInputRef = useRef(null);
     const videoInputRef = useRef(null);
+    const { enqueueSnackbar } = useSnackbar(); // Initialize notistack
 
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user?.id;
@@ -90,6 +93,7 @@ const CreatePost = () => {
             alert("Please upload at least one file.");
             return;
         }
+        setIsLoading(true);
         const formData = new FormData();
         formData.append('userId', userId);
         formData.append('description', description);
@@ -106,8 +110,8 @@ const CreatePost = () => {
             });
 
             if (res.ok) {
-                alert('Post created successfully!');
-                navigate('/post/myposts');
+                enqueueSnackbar('Post created successfully!', { variant: 'success' }); // Use notistack for success message
+                navigate('/profile');
             } else {
                 const text = await res.text();
                 alert('Error: ' + text);
@@ -115,6 +119,8 @@ const CreatePost = () => {
         } catch (err) {
             console.error(err);
             alert('Upload failed');
+        }finally {
+            setIsLoading(false);
         }
     };
 
@@ -175,16 +181,16 @@ const CreatePost = () => {
     const isPostDisabled = !description || files.length === 0 || (!isVideo && files.length > 3) || validationError !== '' || wordCount > 50;
 
     return (
-        <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen py-5 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="p-8"
+                    className="p-6"
                 >
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Create New Post</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-6">Create New Post</h1>
                     <form onSubmit={handleSubmit} onDragOver={(e) => e.preventDefault()} onDrop={handleDragDrop}>
 
                         {/* Description Textarea */}
@@ -192,7 +198,7 @@ const CreatePost = () => {
                 <textarea
                     placeholder="What's on your mind? (Max 50 words)"
                     className="w-full p-4 border border-gray-300 rounded-lg mb-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 bg-gray-50 hover:bg-white"
-                    rows="4"
+                    rows="3"
                     value={description}
                     onChange={handleDescriptionChange}
                 />
@@ -305,6 +311,14 @@ const CreatePost = () => {
                             )}
                         </AnimatePresence>
 
+                        {/* Validation Error */}
+                        {validationError && (
+                            <div className="flex items-center text-red-600 mb-4 gap-2">
+                                <FaExclamationCircle />
+                                <p>{validationError}</p>
+                            </div>
+                        )}
+
                         {/* Media Preview */}
                         {files.length > 0 && (
                             <div className="mb-4">
@@ -388,26 +402,20 @@ const CreatePost = () => {
                             />
                         </div>
 
-                        {/* Validation Error */}
-                        {validationError && (
-                            <div className="flex items-center text-red-600 mb-4 gap-2">
-                                <FaExclamationCircle />
-                                <p>{validationError}</p>
-                            </div>
-                        )}
-
                         {/* Submit Button */}
-                        <button
+                        <motion.button
                             type="submit"
-                            disabled={isPostDisabled}
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                            disabled={isPostDisabled || isLoading}
                             className={`w-full py-3 rounded-lg text-white font-semibold ${
                                 isPostDisabled
                                     ? 'bg-gray-400 cursor-not-allowed'
                                     : 'bg-blue-600 hover:bg-blue-700'
                             }`}
                         >
-                            Post
-                        </button>
+                            {isLoading ? 'Posting...' : 'Post'}
+                        </motion.button>
                     </form>
                 </motion.div>
             </div>

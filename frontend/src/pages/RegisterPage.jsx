@@ -38,44 +38,44 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6">Register</h1>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <h1 className="text-3xl font-bold mb-6">Register</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80 space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          className="w-full p-2 border"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="w-full p-2 border"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full p-2 border"
-          onChange={handleChange}
-          required
-        />
-        <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">Register</button>
-      </form>
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80 space-y-4">
+          <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              className="w-full p-2 border"
+              onChange={handleChange}
+              required
+          />
+          <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="w-full p-2 border"
+              onChange={handleChange}
+              required
+          />
+          <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="w-full p-2 border"
+              onChange={handleChange}
+              required
+          />
+          <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">Register</button>
+        </form>
 
-      <p className="mt-4 text-sm text-gray-600">
-        Already have an account?{' '}
-        <Link to="/" className="text-blue-600 underline hover:text-blue-800">
-          Login here
-        </Link>
-      </p>
-    </div>
+        <p className="mt-4 text-sm text-gray-600">
+          Already have an account?{' '}
+          <Link to="/" className="text-blue-600 underline hover:text-blue-800">
+            Login here
+          </Link>
+        </p>
+      </div>
   );
 };
 

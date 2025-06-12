@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaHome, FaUserFriends, FaBriefcase, FaEnvelope, FaSearch, FaUser, FaTasks, FaSignOutAlt } from 'react-icons/fa';
 import NotificationBell from './NotificationBell.jsx';
+import modernLogo from '../assets/Black and White Modern Personal Brand Logo (1).png';
 
 const NavBar = () => {
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -70,7 +71,7 @@ const NavBar = () => {
         <nav className="bg-blue-950 text-white p-4 flex justify-between items-center fixed w-full top-0 z-50">
             <div className="flex items-center space-x-4">
                 <Link to="/post/viewall" className="text-white text-lg font-bold">
-                    <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+                    <img src={modernLogo} alt="Logo" className="w-14 h-14" /> {/* Use the imported image */}
                 </Link>
             </div>
             <div className="relative flex-1 max-w-2xl mx-auto" ref={searchRef}>
@@ -128,7 +129,7 @@ const NavBar = () => {
                 )}
             </div>
             <div className="flex items-center space-x-8">
-                <Link to="/post/create" className="flex flex-col items-center text-white hover:text-gray-400 transition-colors">
+                <Link to="/post/viewall" className="flex flex-col items-center text-white hover:text-gray-400 transition-colors">
                     <FaHome size={20} />
                     <span className="text-xs mt-1">Home</span>
                 </Link>
@@ -136,7 +137,7 @@ const NavBar = () => {
                     <FaUserFriends size={20} />
                     <span className="text-xs mt-1">Network</span>
                 </Link>
-                <Link to="/aigenerate-tasks" className="flex flex-col items-center text-white hover:text-gray-400 transition-colors">
+                <Link to="/learningplan" className="flex flex-col items-center text-white hover:text-gray-400 transition-colors">
                     <FaTasks size={20} />
                     <span className="text-xs mt-1">Tasks</span>
                 </Link>

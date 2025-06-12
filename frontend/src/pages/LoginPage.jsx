@@ -66,47 +66,47 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-10">
-      <h1 className="text-3xl font-bold">Login</h1>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-10">
+        <h1 className="text-3xl font-bold">Login</h1>
 
-      {/* JWT Form Login */}
-      <form onSubmit={handleJWTLogin} className="bg-white p-6 rounded shadow-md w-80 space-y-4">
-        <h2 className="text-xl font-semibold text-center">Login with Email</h2>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="w-full p-2 border"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full p-2 border"
-          onChange={handleChange}
-          required
-        />
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
-      </form>
+        {/* JWT Form Login */}
+        <form onSubmit={handleJWTLogin} className="bg-white p-6 rounded shadow-md w-80 space-y-4">
+          <h2 className="text-xl font-semibold text-center">Login with Email</h2>
+          <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="w-full p-2 border"
+              onChange={handleChange}
+              required
+          />
+          <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="w-full p-2 border"
+              onChange={handleChange}
+              required
+          />
+          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
+        </form>
 
-      {/* Google OAuth Login */}
-      <div className="bg-white p-6 rounded shadow-md w-80 text-center space-y-2">
-        <h2 className="text-xl font-semibold">Or Login with Google</h2>
-        <GoogleLogin
-          onSuccess={handleLoginSuccess}
-          onError={() => console.error("Google Login Failed")}
-          useOneTap
-        />
-        <p className="text-sm mt-4">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 underline hover:text-blue-800">
-            Register here
-          </Link>
-        </p>
+        {/* Google OAuth Login */}
+        <div className="bg-white p-6 rounded shadow-md w-80 text-center space-y-2">
+          <h2 className="text-xl font-semibold">Or Login with Google</h2>
+          <GoogleLogin
+              onSuccess={handleLoginSuccess}
+              onError={() => console.error("Google Login Failed")}
+              useOneTap
+          />
+          <p className="text-sm mt-4">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-blue-600 underline hover:text-blue-800">
+              Register here
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
   );
 };
 
