@@ -77,5 +77,10 @@ public class UserController {
         return ResponseEntity.ok(following);
     }
 
+    @GetMapping("/all")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
 }
 

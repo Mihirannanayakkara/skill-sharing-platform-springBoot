@@ -26,12 +26,12 @@ public class SkillController {
     }
     @DeleteMapping("/{id}")
     public void deleteSkill(@PathVariable String id) {
-    skillService.deleteSkill(id);
-}
+        skillService.deleteSkill(id);
+    }
 
-@GetMapping("/all")
-public List<Skill> getAllSkills() {
-    return skillService.getAllSkills();
-}
+    @GetMapping("/all")
+    public List<Skill> getAllSkills() {
+        return skillService.getAllSkills();
+    }
 
 }

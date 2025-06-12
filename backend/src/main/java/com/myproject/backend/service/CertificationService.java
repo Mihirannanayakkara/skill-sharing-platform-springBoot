@@ -26,15 +26,15 @@ public class CertificationService {
         return certificationRepository.findByUserId(userId).stream()
                 .filter(cert ->
                         cert.getName().toLowerCase().contains(query.toLowerCase()) ||
-                        cert.getOrganization().toLowerCase().contains(query.toLowerCase()) ||
-                        (cert.getIssueDate() != null && cert.getIssueDate().toString().contains(query))
+                                cert.getOrganization().toLowerCase().contains(query.toLowerCase()) ||
+                                (cert.getIssueDate() != null && cert.getIssueDate().toString().contains(query))
                 ).collect(Collectors.toList());
     }
 
     public Certification updateCertification(String id, Certification updatedCert) {
         Certification existing = certificationRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Certification not found"));
-    
+                .orElseThrow(() -> new RuntimeException("Certification not found"));
+
         existing.setName(updatedCert.getName());
         existing.setOrganization(updatedCert.getOrganization());
         existing.setIssueDate(updatedCert.getIssueDate());
@@ -43,16 +43,16 @@ public class CertificationService {
         existing.setCredentialUrl(updatedCert.getCredentialUrl());
         existing.setSkills(updatedCert.getSkills());
         existing.setCertificateImageBase64(updatedCert.getCertificateImageBase64());
-    
+
         return certificationRepository.save(existing);
     }
-    
+
     public void deleteCertification(String id) {
         certificationRepository.deleteById(id);
     }
-    
+
     public List<Certification> getAllCertifications() {
-    return certificationRepository.findAll();
-}
+        return certificationRepository.findAll();
+    }
 
 }

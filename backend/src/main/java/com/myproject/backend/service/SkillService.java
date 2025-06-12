@@ -20,11 +20,11 @@ public class SkillService {
     public List<Skill> getUserSkills(String userId) {
         return skillRepository.findByUserId(userId);
     }
-    
+
     public void deleteSkill(String id) {
         skillRepository.deleteById(id);
     }
     public List<Skill> getAllSkills() {
-    return skillRepository.findAll();
-}
+        return skillRepository.findAll();
+    }
 }

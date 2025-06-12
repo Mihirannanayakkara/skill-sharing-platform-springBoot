@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class AIImageController {
 
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
-    private static final String API_KEY = "AIzaSyCemNhSkNrBI"; // Replace with your actual key
+    private static final String API_KEY = "AIzaSyCemNhSkNrBIeCRCtqiiDj0mNKPYs4zeFQ"; // Replace with your actual key
 
     @PostMapping("/generate-description")
     public ResponseEntity<?> generateDescription(@RequestParam("image") MultipartFile imageFile) {

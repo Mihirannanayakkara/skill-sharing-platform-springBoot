@@ -18,30 +18,30 @@ public class FirebaseConfig {
     @Value("paf-it-c136a.firebasestorage.app")
     private String storageBucket;
 
-        @PostConstruct
-        public void initialize() throws IOException {
-            try (InputStream serviceAccount = getClass().getClassLoader()
-                    .getResourceAsStream("firebase-adminsdk.json")) {
+    @PostConstruct
+    public void initialize() throws IOException {
+        try (InputStream serviceAccount = getClass().getClassLoader()
+                .getResourceAsStream("firebase-adminsdk.json")) {
 
-                if (serviceAccount == null) {
-                    throw new IllegalStateException("Firebase service account file not found");
-                }
-
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                        .setStorageBucket(storageBucket) // Using your bucket gs://paf-it.firebasestorage.app
-                        .build();
-
-                if (FirebaseApp.getApps().isEmpty()) {
-                    FirebaseApp.initializeApp(options);
-                }
-                System.out.println("Firebase initialized with bucket: " + storageBucket);
+            if (serviceAccount == null) {
+                throw new IllegalStateException("Firebase service account file not found");
             }
-        }
 
-        @Bean
-        public StorageClient storageClient() {
-            return StorageClient.getInstance();
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setStorageBucket(storageBucket) // Using your bucket gs://paf-it.firebasestorage.app
+                    .build();
+
+            if (FirebaseApp.getApps().isEmpty()) {
+                FirebaseApp.initializeApp(options);
+            }
+            System.out.println("Firebase initialized with bucket: " + storageBucket);
         }
+    }
+
+    @Bean
+    public StorageClient storageClient() {
+        return StorageClient.getInstance();
+    }
 
 }

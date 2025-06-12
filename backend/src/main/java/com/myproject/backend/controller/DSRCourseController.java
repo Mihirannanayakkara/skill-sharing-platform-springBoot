@@ -60,9 +60,9 @@ public class DSRCourseController {
         return courseService.getEnrolledCourses(userId);
     }
 
-     @DeleteMapping("/{courseId}/enroll/{userId}")
+    @DeleteMapping("/{courseId}/enroll/{userId}")
     public DSRCourse unenroll(@PathVariable String courseId, @PathVariable String userId) {
         return courseService.unenrollUser(courseId, userId);
     }
-    
+
 }
