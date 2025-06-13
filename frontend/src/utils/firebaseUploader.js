@@ -4,9 +4,9 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCgPS4ZxhhZ79gMyCFP6c7JlkDIPSCLz2M",
-  authDomain: "paf-it-c136a.firebaseapp.com",
-  projectId: "paf-it-c136a",
-  storageBucket: "paf-it-c136a.firebasestorage.app",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
   messagingSenderId: "16558317543",
   appId: "1:16558317543:web:d5c48e0d9e4a562fefa742",
 };
