@@ -1,4 +1,4 @@
-# 🎓 Skill Sharing Plus Social Engaging Platform
+# 🎓 Skill Sharing Platform
 
 A web-based **Skill Sharing Platform** designed to connect individuals who want to teach or learn various skills, with social engagement features similar to popular social networks. 🌐🤝
 
