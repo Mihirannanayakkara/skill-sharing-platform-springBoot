@@ -48,3 +48,32 @@ The platform encourages community interaction and continuous learning by integra
 1. Clone the repository:  
    ```bash
    git clone https://github.com/Rahultt1/Skill-Sharing-plus-Social-Enganging-PLatform.git
+
+2. Navigate to the backend folder (if applicable) 📁
+
+3. Configure your database settings in application.properties or application.yml ⚙️
+
+4 .Build and run the Spring Boot application:
+    ./mvnw spring-boot:run
+
+Frontend (React) 🌐
+
+1. Navigate to the frontend folder (if applicable) 📂
+2. Install dependencies:
+     npm install
+3. Start the React development server:
+     npm start
+
+💡 Usage
+Open your browser and go to http://localhost:3000 (default React dev server address). 🌍
+
+Register a new account or log in. 🔐
+
+Start sharing your skills by creating posts. ✍️
+
+Follow other users and comment on posts. 💬
+
+Subscribe to courses and earn certifications. 🎓
+
+
+
